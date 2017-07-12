@@ -1,0 +1,6 @@
+*.pyc
+COCO_Dataset/
+*.pkl
+*.json
+*.txt
+*.swp
