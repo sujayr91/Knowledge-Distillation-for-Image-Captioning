@@ -53,8 +53,6 @@ def main():
 	
     for epoch in range(config.num_epochs):
         for i, (images, captions, lengths, img_ids) in enumerate(train_loader):
-	    print(captions)
-	    print(img_ids)
 	    images = Variable(images)
             captions = Variable(captions)
             if torch.cuda.is_available():

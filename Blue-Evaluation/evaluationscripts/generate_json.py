@@ -47,8 +47,9 @@ def main():
     img_ids=[]
     loop_count = 0
     for i, (image_tensor,captions, lengths, img_id) in enumerate(train_loader):
-		if img_id[0] img_ids:
+		if img_id[0] in img_ids:
 			continue
+		loop_count+=1
 		img_ids.append(img_id)
 		image_tensor = Variable(image_tensor)
 		state = (Variable(torch.zeros(config.num_layers, 1, config.hidden_size)),
@@ -82,9 +83,9 @@ def main():
 		mydic["image_id"]=img_id[0]
 		mydic["caption"]=bestcaption
 		my_list.append(mydic)
-		if i==2:
-			break
-    filename='./beam'+ str(beam_search_size)+'database.json'
+		if ((i+1)%100==0):
+			print("Image Count=" + str(loop_count))
+    filename='./beam'+ str(beam_search_size)+'database_teacher.json'
     with open(filename , 'w') as myfile:
 	json.dump(my_list,myfile)
 

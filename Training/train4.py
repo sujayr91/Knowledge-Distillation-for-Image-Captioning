@@ -1,7 +1,7 @@
 from data1 import get_data_loader 
 from vocab import Vocabulary
 from configuration import Config
-from model import EncoderCNN, DecoderRNN 
+from model import StudentCNN_Model1, DecoderRNN 
 from torch.autograd import Variable 
 from torch.nn.utils.rnn import pack_padded_sequence
 import torch
@@ -13,6 +13,7 @@ import os
 
 def main():
     # Configuration for hyper-parameters
+    torch.cuda.set_device(1)
     config = Config()
     # Image preprocessing
     transform = config.train_transform
@@ -35,10 +36,14 @@ def main():
     total_step = len(train_loader)
 
     # Build Models
-    encoder = EncoderCNN(config.embed_size)
+    encoder = StudentCNN_Model1(config.embed_size)
+    for param in encoder.resnet.parameters():
+	param.requires_grad=False
+    for param in encoder.resnet.fc.parameters():
+	param.requires_grad=True	
     encoder.eval()
-    decoder = DecoderRNN(config.embed_size, config.hidden_size, 
-                         len(vocab), config.num_layers)
+    decoder = DecoderRNN(config.embed_size, config.hidden_size/2, 
+                         len(vocab), config.num_layers/2)
 
 
     if torch.cuda.is_available():
@@ -53,7 +58,7 @@ def main():
     print('entering in to training loop')    
     # Train the Models
 
-    with open('train1_log.txt', 'w') as logfile:
+    with open('train4_log.txt', 'w') as logfile:
 	    logfile.write('Validation Error,Training Error')
 	    for epoch in range(config.num_epochs):
 		for i, (images, captions, lengths,img_ids) in enumerate(train_loader):
@@ -79,10 +84,10 @@ def main():
 		    # Save the Model
 		    if (i+1) % config.save_step == 0:
 			torch.save(encoder.state_dict(), 
-				   os.path.join(config.teacher_cnn_path, 
+				   os.path.join(config.baseline_cnn_path, 
 						'encoder-%d-%d.pkl' %(epoch+1, i+1)))
 			torch.save(decoder.state_dict(), 
-				   os.path.join(config.teacher_lstm_path, 
+				   os.path.join(config.baseline_lstm_path, 
 						'decoder-%d-%d.pkl' %(epoch+1, i+1)))
 
 		print('Just Completed an Epoch, Initite Validation Error Test')

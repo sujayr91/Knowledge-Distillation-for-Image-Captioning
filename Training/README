@@ -26,5 +26,7 @@ This is used when training student LSTM model. It
 loads the beamsearch captions for an image instead of ground truth
 
 generate_beamsearch_captions.py 
-
 This python script generates beam search database which is used in train3.py for sequence level distillation
+
+train4.py
+This is used for baseline image captioning training. Note that it selects gpu as 1, if not available change it.
