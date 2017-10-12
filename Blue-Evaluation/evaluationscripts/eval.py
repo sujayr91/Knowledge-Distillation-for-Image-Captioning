@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../../../coco-caption')
+sys.path.append('./coco-caption')
 from pycocotools.coco import COCO
 from pycocoevalcap.eval import COCOEvalCap
 import matplotlib.pyplot as plt
@@ -14,18 +14,10 @@ encoder.FLOAT_REPR = lambda o: format(o, '.3f')
 
 # set up file names and pathes
 dataDir='../../COCO_Dataset'
-dataType='val2014'
+dataType='val2017'
 algName = 'fakecap'
 annFile='%s/annotations/captions_%s.json'%(dataDir,dataType)
-subtypes=['results', 'evalImgs', 'eval']
-[resFile, evalImgsFile, evalFile]= \
-['%s/beam5database.json'%('.') for subtype in subtypes]
-
-print('###############')
-print(resFile)
-print(evalImgsFile)
-print('############')
-
+resFile='beam5database_teacher.json'
 # create coco object and cocoRes object
 coco = COCO(annFile)
 cocoRes = coco.loadRes(resFile)

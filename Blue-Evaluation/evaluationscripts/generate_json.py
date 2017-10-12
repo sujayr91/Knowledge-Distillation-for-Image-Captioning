@@ -38,8 +38,8 @@ def main():
     decoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherLSTM', 
                                                     config.trained_decoder)))
     # Build data loader
-    image_path = os.path.join('../../COCO_Dataset', 'val2014')
-    json_path = os.path.join('../../COCO_Dataset/annotations', 'captions_val2014.json')
+    image_path = os.path.join('../../COCO_Dataset', 'val2017')
+    json_path = os.path.join('../../COCO_Dataset/annotations', 'captions_val2017.json')
     train_loader = get_data_loader(image_path, json_path, vocab, 
                                  transform, 1,
                                    shuffle=False, num_workers=config.num_threads) 
@@ -50,7 +50,7 @@ def main():
 		if img_id[0] in img_ids:
 			continue
 		loop_count+=1
-		img_ids.append(img_id)
+		img_ids.append(img_id[0])
 		image_tensor = Variable(image_tensor)
 		state = (Variable(torch.zeros(config.num_layers, 1, config.hidden_size)),
              		Variable(torch.zeros(config.num_layers, 1, config.hidden_size)))

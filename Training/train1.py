@@ -13,6 +13,8 @@ import os
 
 def main():
     # Configuration for hyper-parameters
+
+    torch.cuda.set_device(0)
     config = Config()
     # Image preprocessing
     transform = config.train_transform
@@ -20,14 +22,14 @@ def main():
     with open(os.path.join(config.vocab_path, 'vocab.pkl'), 'rb') as f:
         vocab = pickle.load(f)
     # Build data loader
-    train_image_path = os.path.join(config.image_path, 'train2014')
-    json_path = os.path.join(config.caption_path, 'captions_train2014.json')
+    train_image_path = os.path.join(config.image_path, 'train2017')
+    json_path = os.path.join(config.caption_path, 'captions_train2017.json')
     train_loader = get_data_loader(train_image_path, json_path, vocab, 
                                    transform, config.batch_size,
                                    shuffle=False, num_workers=config.num_threads)
     
-    val_image_path = os.path.join(config.image_path, 'val2014')
-    json_path = os.path.join(config.caption_path, 'captions_val2014.json')
+    val_image_path = os.path.join(config.image_path, 'val2017')
+    json_path = os.path.join(config.caption_path, 'captions_val2017.json')
     val_loader = get_data_loader(val_image_path, json_path, vocab, 
                                    transform, config.batch_size,
                                    shuffle=False, num_workers=config.num_threads)
@@ -40,6 +42,11 @@ def main():
     decoder = DecoderRNN(config.embed_size, config.hidden_size, 
                          len(vocab), config.num_layers)
 
+
+    #encoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherCNN',
+#							config.trained_encoder())))
+    #encoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherLSTM',
+#							config.trained_decoder())))
 
     if torch.cuda.is_available():
         encoder.cuda()
@@ -55,7 +62,7 @@ def main():
 
     with open('train1_log.txt', 'w') as logfile:
 	    logfile.write('Validation Error,Training Error')
-	    for epoch in range(config.num_epochs):
+	    for epoch in range(0,25):
 		for i, (images, captions, lengths,img_ids) in enumerate(train_loader):
 		    images = Variable(images)
 		    captions = Variable(captions)

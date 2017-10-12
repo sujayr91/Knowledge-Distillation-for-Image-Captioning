@@ -28,13 +28,14 @@ class Config(object):
         
         # Training 
         self.num_epochs = 10
-        self.batch_size = 16
+        self.batch_size = 64
         self.learning_rate = 0.0001
+	self.cnn_learningrate=1e-5
         self.log_step = 10
         self.save_step = 1000
         
         # Model
-        self.embed_size = 1000
+        self.embed_size = 512
         self.hidden_size = 512
         self.num_layers = 2
         
@@ -48,6 +49,6 @@ class Config(object):
 	self.student_lstm_path= '../TrainedModels/StudentLSTM'
 	self.baseline_cnn_path= '../TrainedModels/BaselineCNN'
 	self.baseline_lstm_path= '../TrainedModels/BaselineLSTM'
-	self.trained_encoder= 'encoder-5-25000.pkl'
-	self.trained_decoder= 'decoder-5-25000.pkl'
+	self.trained_encoder= 'encoder-38-7000_finetune.pkl'
+	self.trained_decoder= 'decoder-38-7000_finetune.pkl'
 

@@ -9,8 +9,8 @@ class EncoderCNN(nn.Module):
         """Loads the pretrained ResNet-50 and replace top fc layer."""
         super(EncoderCNN, self).__init__()
         self.resnet = models.resnet50(pretrained=True)
-        for param in self.resnet.parameters():
-            param.requires_grad = False
+#        for param in self.resnet.parameters():
+#            param.requires_grad = False
         self.resnet.fc = nn.Linear(self.resnet.fc.in_features, embed_size)
         self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
         self.init_weights()
