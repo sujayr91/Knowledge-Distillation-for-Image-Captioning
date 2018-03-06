@@ -13,7 +13,7 @@ encoder.FLOAT_REPR = lambda o: format(o, '.3f')
 
 
 # set up file names and pathes
-dataDir='../../COCO_Dataset'
+dataDir='../../coco'
 dataType='val2017'
 algName = 'fakecap'
 annFile='%s/annotations/captions_%s.json'%(dataDir,dataType)

@@ -1,16 +1,31 @@
-# KD_ImageCaptioning
-# Follow the instructions, this repo works for Python 2.7
+# Knowledge Distillation for ImageCaptioning
+*  Implementation of Knowledge distillation for Image Captioning. This project
+combines the knowledge distillation techniques introduced in https://arxiv.org/abs/1503.02531, 
+https://arxiv.org/abs/1606.07947 for a multimodal task, i.e Image Captioning
 
-1. In the parent directory of this repo(../) install coco-dataset api's,
-and compile the python API's by calling make to install the coco api's
-local python package. https://github.com/pdollar/coco.git
+* Requirements: 
+	*	Pytorch
+	* 	Coco dataset in the folder coco
+	
+* Training
 
+	* Image Captioning model is trained using teacher_train.py [Only embedding layer of resnet is learnt, all other layers are pretrained model taken from torch]
+	* Create a database with beam search captions from Teacher. Vary beam size per requirment, has utility to get captions with top CIDER scores.[generate_beamsearch_captions.py]
+	* Do joint distillation of CNN + LSTM: Loss = CrossEntropy(studentcaptions, teachercaptions) + MSELoss(studentcnnout, teachercnnout)
 
-2. The COCO_Dataset folder should contain the complete coco dataset as all
- scripts use this relative path. The folder should contain subfolders, namely
- train2017, val2017 and annotations.
+* Networks:
+	*	Teacher CNN: Resnet 50
+	* 	Embedding : 512
+	*	Teacher LSTM: 2 layer, 512 hidden
+	* 	Student CNN: Resnet 18
+	*	Student LSTM: 1 layer, 256 hidden
 
-3. Install torch vision and pytorch on Anaconda 2.7.  On cuda 8
- the command is conda install pytorch torchvision cuda80 -c soumith
+* Evaluation:
 
+	* Use CIDER, Blue Evaluation available in folder Evaluation
+
+* Results:
+
+	* Teacher trained on Ground Truth: Cider 0.867
+	* Student trained using distillation Cider: 0.82
 

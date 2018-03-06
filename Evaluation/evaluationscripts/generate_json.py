@@ -24,7 +24,7 @@ def main():
     # Image Preprocessing
     transform = config.test_transform
     # Load vocabulary
-    with open(os.path.join('../../COCO_Dataset', 'vocab.pkl'), 'rb') as f:
+    with open(os.path.join('../../coco', 'vocab.pkl'), 'rb') as f:
         vocab = pickle.load(f)
     # Build Models
     encoder = EncoderCNN(config.embed_size)
@@ -38,8 +38,8 @@ def main():
     decoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherLSTM', 
                                                     config.trained_decoder)))
     # Build data loader
-    image_path = os.path.join('../../COCO_Dataset', 'val2017')
-    json_path = os.path.join('../../COCO_Dataset/annotations', 'captions_val2017.json')
+    image_path = os.path.join('../../coco', 'val2017')
+    json_path = os.path.join('../../coco/annotations', 'captions_val2017.json')
     train_loader = get_data_loader(image_path, json_path, vocab, 
                                  transform, 1,
                                    shuffle=False, num_workers=config.num_threads) 

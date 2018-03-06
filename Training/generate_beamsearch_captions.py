@@ -17,8 +17,9 @@ import json
 import get_cider
 from pdb import set_trace as st
 from vocab import Vocabulary 
+
 mydatabaselist=[]
-with open(os.path.join('../COCO_Dataset', 'vocab.pkl'), 'rb') as f:
+with open(os.path.join('../coco', 'vocab.pkl'), 'rb') as f:
         vocab = pickle.load(f)
 def sortnreturnindex(ciderlist):
 	indexlist=[i for i in range(0,len(ciderlist))]
@@ -68,10 +69,6 @@ def get_topcider(imageid,sentences):
 		mydic["image_id"]=imageid
 		mydic["caption"]=sentences[index]
 		mydatabaselist.append(mydic)
-		
-		
-			
-
 		
 
 def main():

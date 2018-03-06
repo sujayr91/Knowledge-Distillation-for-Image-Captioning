@@ -1,5 +1,5 @@
 *.pyc
-COCO_Dataset/
+coco/
 *.pkl
 *.json
 *.txt

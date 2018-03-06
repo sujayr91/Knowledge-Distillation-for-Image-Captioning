@@ -71,7 +71,7 @@ def main(image):
     print (sentence)
     return sentence 
 if __name__ == '__main__':
-    path='../COCO_Dataset/val2014/'
+    path='../coco/val2017/'
     parser = argparse.ArgumentParser()
     parser.add_argument('--image', type=str, required=False, help='image for generating caption')
     args = parser.parse_args()

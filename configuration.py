@@ -40,9 +40,9 @@ class Config(object):
         self.num_layers = 2
         
         # Path 
-        self.image_path = '../COCO_Dataset/'
-        self.caption_path = '../COCO_Dataset/annotations/'
-        self.vocab_path = '../COCO_Dataset/'
+        self.image_path = '../coco/'
+        self.caption_path = '../coco/annotations/'
+        self.vocab_path = '../coco/'
 	self.teacher_cnn_path='../TrainedModels/TeacherCNN'
 	self.teacher_lstm_path='../TrainedModels/TeacherLSTM'
 	self.student_cnn_path='../TrainedModels/StudentCNN'

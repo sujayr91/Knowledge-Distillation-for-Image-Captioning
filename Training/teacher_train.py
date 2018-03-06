@@ -43,11 +43,6 @@ def main():
                          len(vocab), config.num_layers)
 
 
-    #encoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherCNN',
-#							config.trained_encoder())))
-    #encoder.load_state_dict(torch.load(os.path.join('../../TrainedModels/TeacherLSTM',
-#							config.trained_decoder())))
-
     if torch.cuda.is_available():
         encoder.cuda()
         decoder.cuda()

@@ -1,4 +1,4 @@
-from data3 import get_data_loader 
+from data2 import get_data_loader 
 from vocab import Vocabulary
 from configuration import Config
 from model import EncoderCNN, DecoderRNN 
@@ -31,22 +31,25 @@ def main():
     total_step = len(train_loader)
 
     # Build Models
-    encoder = EncoderCNN(config.embed_size)
-    encoder.eval()
+    teachercnn = EncoderCNN(config.embed_size)
+    teachercnn.eval()
+    studentcnn = StudentCNN_Model1(config.embed_size)
+    #Load the best teacher model
+    teachercnn.load_state_dict(torch.load(os.path.join('../TrainedModels/TeacherCNN', config.trained_encoder))) 
     studentlstm = DecoderRNN(config.embed_size, config.hidden_size/2, 
                          len(vocab), config.num_layers/2)
 
-    encoder.load_state_dict(torch.load(os.path.join(config.teacher_cnn_path,         
-                                                    config.trained_encoder)))
-	
     if torch.cuda.is_available():
-        encoder.cuda()
+        teachercnn.cuda()
+	studentcnn.cuda()
         studentlstm.cuda()
 
     # Loss and Optimizer
-    criterion = nn.CrossEntropyLoss()
-    params = list(studentlstm.parameters())
-    optimizer = torch.optim.Adam(params, lr=config.learning_rate)    
+    criterion_lstm = nn.CrossEntropyLoss()
+    criterion_cnn = nn.MSELoss()
+    params = list(studentlstm.parameters()) + list(studentcnn.parameters())
+    optimizer_lstm = torch.optim.Adam(params, lr=config.learning_rate)    
+    optimizer_cnn = torch.optim.Adam(studentcnn.parameters(), lr=config.cnn_learningrate)    
     
     print('entering in to training loop')    
     # Train the Models
@@ -60,12 +63,15 @@ def main():
                 captions = captions.cuda()
             targets = pack_padded_sequence(captions, lengths, batch_first=True)[0]
             # Forward, Backward and Optimize
-	    optimizer.zero_grad()
-            features = encoder(images)
-            outputs = studentlstm(features, captions, lengths)
-            loss = criterion(outputs, targets)
+	    optimizer_lstm.zero_grad()
+	    optimizer_cnn.zero_grad()
+            features_tr = teachercnn(images)
+	    features_st = studentcnn(images)
+            outputs = studentlstm(features_st, captions, lengths)
+            loss = criterion(features_st, features_tr.detach()) + criterion_lstm(outputs, targets)
             loss.backward()
-            optimizer.step()
+            optimizer_cnn.step()
+            optimizer_lstm.step()
      
            # Print log info
             if i % config.log_step == 0:
@@ -78,5 +84,9 @@ def main():
                 torch.save(studentlstm.state_dict(), 
                            os.path.join(config.student_lstm_path, 
                                         'decoder-%d-%d.pkl' %(epoch+1, i+1)))
+		torch.save(studentcnn.state_dict(), 
+                           os.path.join(config.student_cnn_path, 
+                                        'encoder-%d-%d.pkl' %(epoch+1, i+1)))
+
 if __name__ == '__main__':
     main()
